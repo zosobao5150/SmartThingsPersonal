@@ -47,6 +47,7 @@ metadata {
         
         attribute "pressure", "number"
         attribute "lastUpdated", "string"
+        attribute "alt","number"
         
 	}
 
