@@ -1,8 +1,5 @@
 /**
- * Brock Ondayko mods
-  * V 2.0.25
- *
- *Bloomsky
+ *  Bloomsky
  *
  *  This DTH requires the BloomSky (Connect) app (https://github.com/tslagle13/SmartThingsPersonal/blob/master/smartapps/tslagle13/bloomsky-connect.src/bloomsky-connect.groovy)
  *
@@ -84,10 +81,10 @@ metadata {
 		}
         //Changed to mb and added avg pressure level and background colors
         valueTile("pressure", "device.pressure", inactiveLabel: false, width: 2, height: 2) {
-			state "pressure", label:'${currentValue} inHg', unit:"",
+			state "pressure", label:'${currentValue} inHG', unit:"",
             backgroundColors:[
 					[value: 25.6, color: "#800080"],
-          [value: 28.95, color: "#0000A0"],
+          				[value: 28.95, color: "#0000A0"],
 					[value: 29.54, color: "#0000FF"],
 					[value: 29.89, color: "#ADD8E6"],
 					[value: 29.91, color: "#008000"],
