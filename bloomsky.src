@@ -81,7 +81,7 @@ metadata {
 		}
         //Changed to mb and added avg pressure level and background colors
         valueTile("pressure", "device.pressure", inactiveLabel: false, width: 2, height: 2) {
-			state "pressure", label:'${currentValue} inHG', unit:"",
+			state "padjust", label:'${currentValue} inHG', unit:"",
             backgroundColors:[
 					[value: 25.6, color: "#800080"],
           				[value: 28.95, color: "#0000A0"],
@@ -112,7 +112,7 @@ metadata {
 				]
 		}
         main(["temperature"])
-		details(["cameraDetails", "temperature", "uv",  "water", "humidity", "pressure","light", "battery", "lastUpdated", "refresh"])}	
+		details(["cameraDetails", "temperature", "uv",  "water", "humidity", "pressure","alt","light", "battery", "lastUpdated", "refresh"])}	
 }    
 
 def poll() {
@@ -189,6 +189,10 @@ private def callAPI() {
                           break;
                         case { key == "uvindex"}: //bloomsky does UV index! how cool is that!?
                         	sendEvent(name: "ultravioletIndex", value: datum)
+                            //log.debug "${key}:${datum}"
+                          break;
+                        case { key == "alt"}: //get elevation (bloomsky sends in meters)
+                        	sendEvent(name: "alt", value: datum)
                             //log.debug "${key}:${datum}"
                           break;
                         case { it instanceof Integer && key != "imagets"}: //check for integers. Two data points are integers so we save some expense doing this.
@@ -270,4 +274,23 @@ def getBattery(v) {
           break;
     }
     return result
+ 
+ 
+ 
+ class Example {     static void main(String[] args) {        //Example of a int datatype        
+
+BigInteger alt = 251;           //Example of a long datatype        
+   
+
+BigDecimal tempC=(temperature-32)/1.8
+BigDecimal pressure=29.29
+BigDecimal presshpasc=pressure*33.8639
+       //Example of a BigDecimal datatype        
+
+BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power(-5.257)
+println(poffset);        
+BigDecimal padjust=poffset/33.8639;
+
+}  
+}
 }
