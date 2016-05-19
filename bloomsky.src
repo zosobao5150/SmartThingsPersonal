@@ -284,11 +284,13 @@ def getBattery(v) {
 //BigInteger alt = 251;           //Example of a long datatype        
    
 def getPressureadjust(value){
+def padjust
 BigDecimal tempC=(temperature-32)/1.8
 BigDecimal pressure=29.29
 BigDecimal presshpasc=pressure*33.8639
 BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power(-5.257)
 BigDecimal padjust=poffset/33.8639;
-return padjust 
+
 }
+return padjust 
 }
