@@ -112,7 +112,7 @@ metadata {
 				]
 		}
         main(["temperature"])
-		details(["cameraDetails", "temperature", "uv",  "water", "humidity", "pressure","alt","light", "battery", "lastUpdated", "refresh"])}	
+		details(["cameraDetails", "temperature", "uv",  "padjust", "water", "humidity", "pressure","alt","light", "battery", "lastUpdated", "refresh"])}	
 }    
 
 def poll() {
@@ -178,11 +178,7 @@ private def callAPI() {
                         	sendEvent(name: "water", value: "wet")
                             //log.debug "${key}:${datum}"
                           break;
-                       // case { key == "pressure"}: //custom addition by zosobao to show pressure in mb. you must add a deviation (30.8 in my case) 
-                        //that depends on your location feet above sea level
-                        	//sendEvent(name:"pressure", value: datum)
-                            //log.debug "${key}:${datum}"
-                         // break;
+                        
                         case { key == "luminance"}: //update illuminance
                         	sendEvent(name: "illuminance", value: datum)
                             //log.debug "${key}:${datum}"
@@ -203,6 +199,12 @@ private def callAPI() {
                         	def temp = getTemperature(datum).toDouble().trunc(1)
                         	sendEvent(name:"${key}", value: temp)
                             //log.debug "${key}:${temp}"
+                          break;
+                    	case { key == "pressure"}: //custom addition by zosobao to show pressure in mb. you must add a deviation (30.8 in my case) 
+                        //that depends on your location feet above sea level
+                        	def padjust = getPressureadjust(datum).trun(2)
+                        	sendEvent(name:"[padjust", value: datum)
+                            //log.debug "${key}:${datum}"
                           break;
                     	case { it instanceof BigDecimal && key != "imagets"}: //rest of the data points are big decimals. Another expense saver.
                         	def newDatum = datum.toFloat().trunc(1)
@@ -277,20 +279,16 @@ def getBattery(v) {
  
  
  
- class Example {     static void main(String[] args) {        //Example of a int datatype        
-
-BigInteger alt = 251;           //Example of a long datatype        
+ //class Example {     static void main(String[] args) {        //Example of a int datatype        
+//get
+//BigInteger alt = 251;           //Example of a long datatype        
    
-
+def getPressureadjust(value){
 BigDecimal tempC=(temperature-32)/1.8
 BigDecimal pressure=29.29
 BigDecimal presshpasc=pressure*33.8639
-       //Example of a BigDecimal datatype        
-
 BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power(-5.257)
-println(poffset);        
 BigDecimal padjust=poffset/33.8639;
-
-}  
+return padjust 
 }
 }
