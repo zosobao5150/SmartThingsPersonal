@@ -80,7 +80,7 @@ metadata {
 			state "humidity", label:'${currentValue}% humidity', unit:""
 		}
         //Changed to mb and added avg pressure level and background colors
-        valueTile("pressure", "pressure", inactiveLabel: false, width: 2, height: 2) {
+        valueTile("pressure", "device.pressure", inactiveLabel: false, width: 2, height: 2) {
 			state "default", label:'${currentValue} inHG', unit:"",
             backgroundColors:[
 					[value: 25.6, color: "#800080"],
@@ -188,6 +188,7 @@ private def callAPI() {
                             //log.debug "${key}:${datum}"
                           break;
                         case { key == "alt"}: //get elevation (bloomsky sends in meters)
+                        	BigDecimal alt=datum
                         	sendEvent(name: "alt", value: datum)
                             //log.debug "${key}:${datum}"
                           break;
@@ -202,7 +203,7 @@ private def callAPI() {
                           break;
                     	case { key == "pressure"}: //custom addition by zosobao to show pressure in mb. you must add a deviation (30.8 in my case) 
                         //that depends on your location feet above sea level
-                                sendEvent(name:"pressure", value: getpressureadjust(datum))
+                                sendEvent(name:"pressure", value: getPressureadjust(datum))
                             //log.debug "${key}:${datum}"
                           break;
                     	case { it instanceof BigDecimal && key != "imagets"}: //rest of the data points are big decimals. Another expense saver.
@@ -282,9 +283,9 @@ def getBattery(v) {
 //get
 //BigInteger alt = 251;           //Example of a long datatype        
    
-getPressureadjust(value){
-
-BigDecimal tempC=(temperature-32)/1.8
+def getPressureadjust(value){
+def padjust
+BigDecimal tempC=(temp-32)/1.8
 BigDecimal presshpasc=pressure*33.8639
 BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power(-5.257)
 BigDecimal padjust=poffset/33.8639;
