@@ -80,7 +80,7 @@ metadata {
 			state "humidity", label:'${currentValue}% humidity', unit:""
 		}
         //Changed to mb and added avg pressure level and background colors
-        valueTile("pressure", "padjust", inactiveLabel: false, width: 2, height: 2) {
+        valueTile("pressure", "pressure", inactiveLabel: false, width: 2, height: 2) {
 			state "default", label:'${currentValue} inHG', unit:"",
             backgroundColors:[
 					[value: 25.6, color: "#800080"],
@@ -202,8 +202,7 @@ private def callAPI() {
                           break;
                     	case { key == "pressure"}: //custom addition by zosobao to show pressure in mb. you must add a deviation (30.8 in my case) 
                         //that depends on your location feet above sea level
-                        	def padjust = getPressureadjust(datum).trun(2)
-                        	sendEvent(name:"padjust", value: datum)
+                                sendEvent(name:"pressure", value: getpressureadjust(datum))
                             //log.debug "${key}:${datum}"
                           break;
                     	case { it instanceof BigDecimal && key != "imagets"}: //rest of the data points are big decimals. Another expense saver.
@@ -291,5 +290,5 @@ BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power
 BigDecimal padjust=poffset/33.8639;
 
 }
-return padjust(q) 
+return padjust
 }
