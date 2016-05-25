@@ -128,14 +128,14 @@ def refresh() {
 //BigInteger alt = 251;           //Example of a long datatype        
    
 def getPressureadjust(value){
-def padjust
-BigDecimal tempC=(temp-32)/1.8
+
+//BigDecimal tempC=(temp-32)/1.8
 BigDecimal presshpasc=pressure*33.8639
 BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power(-5.257)
 BigDecimal padjust=poffset/33.8639;
-
+return padjust()
 }
-return padjust
+
 
 //convert temp to celcius if needed
 def getTemperature(value) {
@@ -201,23 +201,24 @@ private def callAPI() {
                           break;
                         case { key == "alt"}: //get elevation (bloomsky sends in meters)
                         	def alt=(datum).toFloat()
-                        	sendEvent(name: "alt", value: datum)
-                            //log.debug "${key}:${datum}"
+                        	sendEvent(name: "alt", value: alt)
+                            log.debug "${key}:${datum}"
                           break;
                         case { it instanceof Integer && key != "imagets"}: //check for integers. Two data points are integers so we save some expense doing this.
                         	sendEvent(name:"${key}", value: datum)
                             //log.debug "${key}:${datum}"
                           break;
                         case { key == "temperature"}: //temperature needs to be converted to celcuis in some cases so we break it out on its own
-                        	def temp = getTemperature(datum).toDouble().trunc(1)
+                        	def temp=(datum).toFloat()
+                            //def temp = getTemperature(datum).toDouble().trunc(1)
                         	sendEvent(name:"${key}", value: temp)
                             //log.debug "${key}:${temp}"
                           break;
                     	case { key == "pressure"}: //custom addition by zosobao to show pressure in mb. you must add a deviation (30.8 in my case) 
                         //that depends on your location feet above sea level
                                 def pressure=(datum)
-                                assert pressure.toBigInterger()
-                                sendEvent(name:"pressure", value: getPressureadjust(datum))
+                                assert pressure.toBigInteger()
+                                sendEvent(name:"pressure", value: getPressureadjust(pressure))
                             //log.debug "${key}:${datum}"
                           break;
                     	case { it instanceof BigDecimal && key != "imagets"}: //rest of the data points are big decimals. Another expense saver.
