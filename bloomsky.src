@@ -203,6 +203,8 @@ private def callAPI() {
                           break;
                     	case { key == "pressure"}: //custom addition by zosobao to show pressure in mb. you must add a deviation (30.8 in my case) 
                         //that depends on your location feet above sea level
+                                def pressure=(datum)
+                                assert pressure.toBigInterger()
                                 sendEvent(name:"pressure", value: getPressureadjust(datum))
                             //log.debug "${key}:${datum}"
                           break;
