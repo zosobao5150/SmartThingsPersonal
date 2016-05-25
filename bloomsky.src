@@ -123,7 +123,19 @@ def refresh() {
 	callAPI()
 }
 
+//class Example {     static void main(String[] args) {        //Example of a int datatype        
+//get
+//BigInteger alt = 251;           //Example of a long datatype        
+   
+def getPressureadjust(value){
+def padjust
+BigDecimal tempC=(temp-32)/1.8
+BigDecimal presshpasc=pressure*33.8639
+BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power(-5.257)
+BigDecimal padjust=poffset/33.8639;
 
+}
+return padjust
 
 //convert temp to celcius if needed
 def getTemperature(value) {
@@ -188,7 +200,7 @@ private def callAPI() {
                             //log.debug "${key}:${datum}"
                           break;
                         case { key == "alt"}: //get elevation (bloomsky sends in meters)
-                        	BigDecimal alt=datum
+                        	def alt=(datum).toFloat()
                         	sendEvent(name: "alt", value: datum)
                             //log.debug "${key}:${datum}"
                           break;
@@ -281,17 +293,5 @@ def getBattery(v) {
  
  
  
- //class Example {     static void main(String[] args) {        //Example of a int datatype        
-//get
-//BigInteger alt = 251;           //Example of a long datatype        
-   
-def getPressureadjust(value){
-def padjust
-BigDecimal tempC=(temp-32)/1.8
-BigDecimal presshpasc=pressure*33.8639
-BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power(-5.257)
-BigDecimal padjust=poffset/33.8639;
-
-}
-return padjust
+ 
 }
