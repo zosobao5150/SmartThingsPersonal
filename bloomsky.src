@@ -129,11 +129,11 @@ def refresh() {
    
 def getPressureadjust(value){
 
-//BigDecimal tempC=(temp-32)/1.8
+BigDecimal tempC=(temp-32)/1.8
 BigDecimal presshpasc=pressure*33.8639
 BigDecimal poffset=presshpasc*(1-((0.0065*alt)/(tempC+0.0065*alt+273.15))).power(-5.257)
 BigDecimal padjust=poffset/33.8639;
-return padjust()
+return padjust
 }
 
 
@@ -216,8 +216,7 @@ private def callAPI() {
                           break;
                     	case { key == "pressure"}: //custom addition by zosobao to show pressure in mb. you must add a deviation (30.8 in my case) 
                         //that depends on your location feet above sea level
-                                def pressure=(datum)
-                                assert pressure.toBigInteger()
+                                def pressure=(datum).toFloat()
                                 sendEvent(name:"pressure", value: getPressureadjust(pressure))
                             //log.debug "${key}:${datum}"
                           break;
